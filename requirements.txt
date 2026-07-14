@@ -14,9 +14,5 @@ python-docx>=0.8
 lxml>=4.9
 requests>=2.25.0
 onnxruntime>=1.17.0
-# Local model deployment (optional)
-vllm>=0.2.0
-torch>=2.0.0
-transformers>=4.30.0
-accelerate>=0.20.0
+# Required to download the layout detection model on first use.
 modelscope>=1.9.0

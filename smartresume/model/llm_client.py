@@ -16,14 +16,14 @@ import json_repair
 try:
     from vllm import LLM, SamplingParams
     VLLM_AVAILABLE = True
-except ImportError:
+except Exception:
     VLLM_AVAILABLE = False
 
 try:
     from transformers import AutoTokenizer, AutoModelForCausalLM
     import torch
     TRANSFORMERS_AVAILABLE = True
-except ImportError:
+except Exception:
     TRANSFORMERS_AVAILABLE = False
 
 
