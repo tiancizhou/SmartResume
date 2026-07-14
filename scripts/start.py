@@ -4,7 +4,7 @@ SmartResume - Startup script
 
 Usage:
    python scripts/start.py --file resume.pdf
-   python scripts/start.py --file resume.pdf --extract_types basic_info work_experience education
+   python scripts/start.py --file resume.pdf --extract_types basic_info work_experience education project_experience skills certificates awards self_evaluation
 """
 import os
 import sys
@@ -15,6 +15,17 @@ from typing import Dict, Any
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+DEFAULT_EXTRACT_TYPES = [
+    "basic_info",
+    "work_experience",
+    "education",
+    "project_experience",
+    "skills",
+    "certificates",
+    "awards",
+    "self_evaluation",
+]
 
 try:
     from smartresume import ResumeAnalyzer
@@ -42,7 +53,7 @@ def parse_single_resume(file_path: str, **kwargs) -> Dict[str, Any]:
             resume_id=resume_id,
             extract_types=kwargs.get(
                 'extract_types',
-                ["basic_info", "work_experience", "education"]
+                DEFAULT_EXTRACT_TYPES
             )
         )
 
@@ -61,7 +72,7 @@ def main():
     parser.add_argument('--file', type=str, required=True, help='Resume file path to parse')
     parser.add_argument(
         '--extract_types', nargs='+',
-        default=['basic_info', 'work_experience', 'education'],
+        default=DEFAULT_EXTRACT_TYPES,
         help='Extraction types'
     )
 

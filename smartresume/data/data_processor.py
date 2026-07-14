@@ -232,12 +232,29 @@ class DataProcessor:
                     )
                 )
 
+            for key, value in raw_data.items():
+                if key not in processed_data:
+                    processed_data[key] = self._clean_nested_value(value)
+
             self._validate_fields_in_text(processed_data, text_lines)
 
             return processed_data
 
         except Exception:
             return raw_data
+
+    def _clean_nested_value(self, value: Any) -> Any:
+        """Clean strings recursively while preserving unknown output fields."""
+        if isinstance(value, str):
+            return self._clean_text(value)
+        if isinstance(value, list):
+            return [self._clean_nested_value(item) for item in value]
+        if isinstance(value, dict):
+            return {
+                key: self._clean_nested_value(item)
+                for key, item in value.items()
+            }
+        return value
 
     def _process_basic_info(self, basic_info: Dict[str, Any]) -> Dict[str, Any]:
         """Process basic info"""

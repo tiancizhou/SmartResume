@@ -38,6 +38,11 @@ extract_channels:
   basic_info: "local_qwen"
   work_experience: "local_qwen"
   education: "local_qwen"
+  project_experience: "local_qwen"
+  skills: "local_qwen"
+  certificates: "local_qwen"
+  awards: "local_qwen"
+  self_evaluation: "local_qwen"
 
 # Processing configuration
 processing:

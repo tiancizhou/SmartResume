@@ -91,6 +91,69 @@ EDUCATION_PROMPT = """
 }
 """
 
+PROJECT_EXPERIENCE_PROMPT = """
+提取项目经历到 JSON。若不存在则输出空数组，不要编造。
+{
+  "projectExperience": [
+    {
+      "projectName": "", # 项目名称
+      "projectPeriod": {
+        "startDate": "", # 开始时间，格式为 %Y.%m 或 %Y；不存在填 ""
+        "endDate": "" # 结束时间；至今填写 "至今"；不存在填 ""
+      },
+      "position": "", # 项目角色/职责，如 项目负责人、后端开发；不存在填 ""
+      "projectDescription": "" # 项目描述、技术栈、职责、成果。直接使用简历原文信息，不要编造。
+    }
+  ]
+}
+"""
+
+SKILLS_PROMPT = """
+提取专业技能到 JSON。若不存在则 description 填 ""，不要编造。
+{
+  "skills": {
+    "description": "" # 技能/技术栈/工具/语言能力等，保留简历原文要点，可用换行分隔。
+  }
+}
+"""
+
+CERTIFICATES_PROMPT = """
+提取证书/资格认证到 JSON。若不存在则输出空数组，不要编造。
+{
+  "certificates": [
+    {
+      "certificateName": "", # 证书名称
+      "issuingAuthority": "", # 发证机构；不存在填 ""
+      "issueDate": "", # 获证/发证时间；不存在填 ""
+      "description": "" # 证书说明；不存在填 ""
+    }
+  ]
+}
+"""
+
+AWARDS_PROMPT = """
+提取获奖经历/荣誉到 JSON。若不存在则输出空数组，不要编造。
+{
+  "awards": [
+    {
+      "awardName": "", # 奖项/荣誉名称
+      "awardDate": "", # 获奖时间；不存在填 ""
+      "awardLevel": "", # 奖项级别/名次；不存在填 ""
+      "description": "" # 奖项说明；不存在填 ""
+    }
+  ]
+}
+"""
+
+SELF_EVALUATION_PROMPT = """
+提取自我评价/个人优势到 JSON。若不存在则 description 填 ""，不要编造。
+{
+  "selfEvaluation": {
+    "description": "" # 自我评价、个人优势、职业亮点等，保留简历原文要点，可用换行分隔。
+  }
+}
+"""
+
 THINK_TAG = " /no_think"
 
 
@@ -100,4 +163,9 @@ def get_prompts() -> Dict[str, str]:
         "basic_info": SYSTEM_PROMPT + BASIC_INFO_PROMPT + THINK_TAG,
         "work_experience": SYSTEM_PROMPT + WORK_EXPERIENCE_PROMPT + THINK_TAG,
         "education": SYSTEM_PROMPT + EDUCATION_PROMPT + THINK_TAG,
+        "project_experience": SYSTEM_PROMPT + PROJECT_EXPERIENCE_PROMPT + THINK_TAG,
+        "skills": SYSTEM_PROMPT + SKILLS_PROMPT + THINK_TAG,
+        "certificates": SYSTEM_PROMPT + CERTIFICATES_PROMPT + THINK_TAG,
+        "awards": SYSTEM_PROMPT + AWARDS_PROMPT + THINK_TAG,
+        "self_evaluation": SYSTEM_PROMPT + SELF_EVALUATION_PROMPT + THINK_TAG,
     }

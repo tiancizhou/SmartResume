@@ -25,6 +25,16 @@ from smartresume.backend.resume_analyzer import ResumeAnalyzer  # noqa: E402
 
 
 MAX_UPLOAD_SIZE = 20 * 1024 * 1024  # 20MB
+DEFAULT_EXTRACT_TYPES = [
+    "basic_info",
+    "work_experience",
+    "education",
+    "project_experience",
+    "skills",
+    "certificates",
+    "awards",
+    "self_evaluation",
+]
 
 # Flask app for serving the HTML template
 app = Flask(__name__, template_folder='templates')
@@ -89,7 +99,7 @@ def analyze_resume_SmartResume():
         result = analyzer.pipeline(
             cv_path=temp_file_path,
             resume_id="web_demo",
-            extract_types=["basic_info", "work_experience", "education"]
+            extract_types=DEFAULT_EXTRACT_TYPES
         )
 
         print(f"SmartResume result: {result}")
@@ -151,7 +161,12 @@ def convert_SmartResume_to_frontend_format(SmartResume_result):
     converted_data = {
         "basicInfo": {},
         "education": [],
-        "workExperience": []
+        "workExperience": [],
+        "projectExperience": [],
+        "skills": {},
+        "certificates": [],
+        "awards": [],
+        "selfEvaluation": {}
     }
 
     try:
@@ -206,6 +221,62 @@ def convert_SmartResume_to_frontend_format(SmartResume_result):
                         "internship": work.get('internship', 0)
                     }
                     converted_data["workExperience"].append(converted_work)
+
+        if 'projectExperience' in SmartResume_result and SmartResume_result['projectExperience']:
+            for project in SmartResume_result['projectExperience']:
+                if project:
+                    converted_project = {
+                        "projectName": project.get('projectName', ''),
+                        "position": project.get('position', ''),
+                        "projectPeriod": {
+                            "startDate": project.get('projectPeriod', {}).get('startDate', ''),
+                            "endDate": project.get('projectPeriod', {}).get('endDate', '')
+                        },
+                        "projectDescription": project.get('projectDescription', '')
+                    }
+                    converted_data["projectExperience"].append(converted_project)
+
+        if 'skills' in SmartResume_result and SmartResume_result['skills']:
+            skills = SmartResume_result['skills']
+            converted_data["skills"] = {
+                "description": (
+                    skills.get('description', '')
+                    if isinstance(skills, dict)
+                    else str(skills)
+                )
+            }
+
+        if 'certificates' in SmartResume_result and SmartResume_result['certificates']:
+            for cert in SmartResume_result['certificates']:
+                if cert:
+                    converted_cert = {
+                        "certificateName": cert.get('certificateName', ''),
+                        "issuingAuthority": cert.get('issuingAuthority', ''),
+                        "issueDate": cert.get('issueDate', ''),
+                        "description": cert.get('description', '')
+                    }
+                    converted_data["certificates"].append(converted_cert)
+
+        if 'awards' in SmartResume_result and SmartResume_result['awards']:
+            for award in SmartResume_result['awards']:
+                if award:
+                    converted_award = {
+                        "awardName": award.get('awardName', ''),
+                        "awardDate": award.get('awardDate', ''),
+                        "awardLevel": award.get('awardLevel', ''),
+                        "description": award.get('description', '')
+                    }
+                    converted_data["awards"].append(converted_award)
+
+        if 'selfEvaluation' in SmartResume_result and SmartResume_result['selfEvaluation']:
+            evaluation = SmartResume_result['selfEvaluation']
+            converted_data["selfEvaluation"] = {
+                "description": (
+                    evaluation.get('description', '')
+                    if isinstance(evaluation, dict)
+                    else str(evaluation)
+                )
+            }
 
         print("Successfully converted SmartResume result to frontend format")
 
