@@ -22,18 +22,26 @@ if errorlevel 1 (
 
 echo Logging in to %HARBOR_REGISTRY%...
 docker login %HARBOR_REGISTRY%
-if errorlevel 1 exit /b %errorlevel%
+if errorlevel 1 goto :failed
 
 echo Building %IMAGE%...
 docker build --file docker\Dockerfile --tag %IMAGE% .
-if errorlevel 1 exit /b %errorlevel%
+if errorlevel 1 goto :failed
 
 echo Pushing %IMAGE%...
 docker push %IMAGE%
-if errorlevel 1 exit /b %errorlevel%
+if errorlevel 1 goto :failed
 
 echo.
 echo Image published: %IMAGE%
 echo On the server, set SMARTRESUME_IMAGE=%IMAGE% and run:
 echo docker compose --env-file docker/.env.production -f docker/docker-compose.production.yml pull
 echo docker compose --env-file docker/.env.production -f docker/docker-compose.production.yml up -d
+goto :end
+
+:failed
+echo.
+echo ERROR: The previous Docker command failed. Review the message above.
+
+:end
+pause
